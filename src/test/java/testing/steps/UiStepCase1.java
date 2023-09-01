@@ -135,7 +135,7 @@ public class UiStepCase1 {
     public void клик_на_кнопку_сохранить(){
         driver.findElement(By.id("save")).click();
     }
-    @Допустим("Модальное окно закрыто")
+    @Допустим("Закрытие модального окна")
     public void модальное_окно_закрыто() {
         wait = new WebDriverWait(driver, Duration.ofSeconds(3));
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(5));
