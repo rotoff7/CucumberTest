@@ -11,11 +11,10 @@ public class BaseTest {
 
     @BeforeAll
     static void beforeTests() {
-
         ChromeOptions co = new ChromeOptions();
         co.setBinary("E:\\TestChrome\\chrome-win64\\chrome.exe");
 
-        System.setProperty("webdriver.chrome.driver", "src.test.resources.chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
         driver = new ChromeDriver(co);
 
         driver.get("http://localhost:8080/food");

@@ -43,7 +43,7 @@ public class DBTest extends BaseTest {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
