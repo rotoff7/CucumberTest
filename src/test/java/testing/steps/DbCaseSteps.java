@@ -17,7 +17,7 @@ public class DbCaseSteps {
 
     private Connection connection;
     private String sqlInsert = "INSERT INTO food (food_name, food_type, food_exotic) VALUES (?, ?, ?);";
-    private String sqlSelect = ("SELECT * FROM food WHERE food_name = ? AND food_type = ?;");
+    private String sqlSelect = "SELECT * FROM food WHERE food_name = ? AND food_type = ?;";
 
     @И("^установка соединения с БД \"([^\"]*)\"$")
     public void connect(String bdType) {
@@ -41,18 +41,16 @@ public class DbCaseSteps {
             ps.setString(1, foodName);
             ps.setString(2, foodType);
             ps.setInt(3, foodExotic);
+            ps.executeUpdate();
 
             try (ResultSet resultSet = ps.getGeneratedKeys();) {
                 resultSet.last();
-                int RowId = resultSet.getInt(1);
-                DataManager.getDataManager().saveDataValue("generatedId", String.valueOf(RowId));
+                int lastRowId = resultSet.getInt(1);
+                DataManager.getDataManager().saveDataValue("generatedId", String.valueOf(lastRowId));
             }
         } catch (SQLException e){
             throw new RuntimeException(e);
         }
-
-        // Код для добавления нового товара в базу данных
-        // Используйте переменные foodName, foodType и foodExotic для сохранения значений в базе данных
     }
 
     @И("получить из таблицы данные о добавленном товаре")
@@ -65,27 +63,23 @@ public class DbCaseSteps {
                 DataManager.getDataManager().saveDataValue("name", rs.getString("food_name"));
                 DataManager.getDataManager().saveDataValue("type", rs.getString("food_type"));
                 DataManager.getDataManager().saveDataValue("exotic", rs.getString("food_exotic"));
-//                        Проверяем корректность данных. Надеюсь тут правильность установки id ассертить не надо.
-//                Assertions.assertEquals("Нвй фрукт1 тест", name, "Wrong name");
-//                Assertions.assertEquals("FRUIT", type, "Wrong type");
-//                Assertions.assertEquals(1, exotic, "Wrong exotic type");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    @И("сверить корректность данных: ")
+    @И("^сверить корректность данных:$")
     public void сверка_данных(Map<String,String> standard){
         List<String> data = new ArrayList<>(DataManager.getDataManager().getMap().values());
-        for (int i = 0; i < data.size(); i++) {
-
-        }
+        int index = 0;
+        System.out.println(data);
         for (String value : standard.values()){
-//            if (value.startsWith("#:")){
-//                String id = DataManager.getDataManager().getDataValue("generatedId");
-//            }
-            Assertions.assertEquals(value, data);
+            if (value.startsWith("#:")){
+                value = DataManager.getDataManager().getDataValue("generatedId");
+            }
+            Assertions.assertEquals(value, data.get(index), "Assertion fail");
+            index+=1;
         }
     }
 
