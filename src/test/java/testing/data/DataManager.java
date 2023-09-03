@@ -1,6 +1,7 @@
 package testing.data;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class DataManager {
 
@@ -21,5 +22,8 @@ public class DataManager {
 
     public void saveDataValue(String key, String value) {
         this.map.put(key, value);
+    }
+    public Map<String, String> getMap(){
+        return map;
     }
 }

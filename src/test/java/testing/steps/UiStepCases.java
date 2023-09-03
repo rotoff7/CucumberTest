@@ -167,7 +167,7 @@ public class UiStepCases {
 
     // START FROM HERE
 
-    @И("^закрытие .* \"([^\"]*)\"$")
+    @И("^.* \"([^\"]*)\" закрыто$")
     public void модальное_окно_закрыто(String elemToBeClosed) {
         if (elemToBeClosed.equals("Добавление товара")) {
             try {

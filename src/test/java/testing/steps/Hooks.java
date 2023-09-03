@@ -8,12 +8,17 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.Duration;
 
 public class Hooks {
 
     static WebDriver driver;
     static WebDriverWait wait;
+
+    static Connection connection;
     @Before("@ui") // В BeforeALl нельзя установить тег
     public void beforeTest(){
         ChromeOptions co = new ChromeOptions();
@@ -27,6 +32,17 @@ public class Hooks {
 
         wait = new WebDriverWait(driver, Duration.ofSeconds(3));
     }
+
+//    @Before("db")
+//    public void connect() {
+//        DataSource source = getDataSource();
+//        try {
+//            connection = source.getConnection();
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+
     @After("@ui")
     public void afterTest(){
         driver.close();
