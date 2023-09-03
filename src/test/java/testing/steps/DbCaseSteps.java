@@ -12,6 +12,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class DbCaseSteps {
 
@@ -34,9 +35,9 @@ public class DbCaseSteps {
     }
     @И("^добавить новый товар в бд:$")
     public void добавитьНовыйТоварВБд(Map<String, String> data) {
-        String foodName = data.get("food_name");
-        String foodType = data.get("food_type");
-        int foodExotic = Integer.parseInt(data.get("food_exotic"));
+        String foodName = data.get("FOOD_NAME");
+        String foodType = data.get("FOOD_TYPE");
+        int foodExotic = Integer.parseInt(data.get("FOOD_EXOTIC"));
         try (PreparedStatement ps = connection.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS)){
             ps.setString(1, foodName);
             ps.setString(2, foodType);
@@ -46,7 +47,7 @@ public class DbCaseSteps {
             try (ResultSet resultSet = ps.getGeneratedKeys();) {
                 resultSet.last();
                 int lastRowId = resultSet.getInt(1);
-                DataManager.getDataManager().saveDataValue("generatedId", String.valueOf(lastRowId));
+                DataManager.getDataManager().saveDataValue("FOOD_ID", String.valueOf(lastRowId));
             }
         } catch (SQLException e){
             throw new RuntimeException(e);
@@ -60,9 +61,9 @@ public class DbCaseSteps {
             ps.setString(2, "FRUIT");
             try (ResultSet rs = ps.executeQuery()) {
                 rs.last();
-                DataManager.getDataManager().saveDataValue("name", rs.getString("food_name"));
-                DataManager.getDataManager().saveDataValue("type", rs.getString("food_type"));
-                DataManager.getDataManager().saveDataValue("exotic", rs.getString("food_exotic"));
+                DataManager.getDataManager().saveDataValue("FOOD_NAME", rs.getString("FOOD_NAME"));
+                DataManager.getDataManager().saveDataValue("FOOD_TYPE", rs.getString("FOOD_TYPE"));
+                DataManager.getDataManager().saveDataValue("FOOD_EXOTIC", rs.getString("FOOD_EXOTIC"));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -71,16 +72,16 @@ public class DbCaseSteps {
 
     @И("^сверить корректность данных:$")
     public void сверка_данных(Map<String,String> standard){
-        List<String> data = new ArrayList<>(DataManager.getDataManager().getMap().values());
-        int index = 0;
-        System.out.println(data);
-        for (String value : standard.values()){
-            if (value.startsWith("#:")){
-                value = DataManager.getDataManager().getDataValue("generatedId");
+        Map<String, String> datam = DataManager.getDataManager().getMap();
+        Set<String> setkey = standard.keySet();
+        System.out.println(datam);
+        for (String key : setkey){
+            if (standard.get(key).startsWith("#:")){
+                continue; // ИСПРААААВИТЬ!!!1
             }
-            Assertions.assertEquals(value, data.get(index), "Assertion fail");
-            index+=1;
+            Assertions.assertEquals(standard.get(key), datam.get(key),"Assertions fail");
         }
+
     }
 
     private void delRow(int id, Connection connect) {

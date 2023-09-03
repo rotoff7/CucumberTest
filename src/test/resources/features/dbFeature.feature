@@ -12,18 +12,18 @@
   Сценарий: Добавление товара в БД
     * добавить новый товар в бд:
       | column      | value           |
-      | food_name   | Нвй фрукт1 тест |
-      | food_type   | FRUIT           |
-      | food_exotic | 1               |
+      | FOOD_NAME   | Нвй фрукт1 тест |
+      | FOOD_TYPE   | FRUIT           |
+      | FOOD_EXOTIC | 1               |
 #    * cохранить значение "id" в DataManager
     * получить из таблицы данные о добавленном товаре
 #    * сохранить данные выборки в DataManager
     * сверить корректность данных:
-      | food_id     | #:food_id       |
-      | food_name   | Нвй фрукт1 тест |
+      | FOOD_ID     | #:food_id       |
+      | FOOD_NAME   | Нвй фрукт1 тест |
 #      | food_type   | FRUIT           |
-      | food_exotic | 1               |
-      | food_type   | FRUIT           |
+      | FOOD_EXOTIC | 1               |
+      | FOOD_TYPE   | FRUIT           |
 
 #      | column      | standard        | data     |
 #      | food_id     | #:generatedId   | #:newID  |
