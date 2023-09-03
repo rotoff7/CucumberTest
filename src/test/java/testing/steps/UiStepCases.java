@@ -9,8 +9,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 
-import java.time.Duration;
-
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class UiStepCases {
@@ -85,10 +83,10 @@ public class UiStepCases {
         }
     }
 
-    @Тогда("^кнопка \"([^\"]*)\" синего цвета")
+    @И("^кнопка \"([^\"]*)\" синего цвета")
     public void кнопка_синего_цвета(String elName) {
         if (elName.equals("Добавить")) {
-            WebElement button = getElementByXpath("//button[@data-target='#editModal']");
+            WebElement button = driver.findElement(By.xpath("//button[@data-target='#editModal']"));
             String backgroundColor = button.getCssValue("background-color");
             String borderColor = button.getCssValue("border-color");
             Assertions.assertEquals("rgba(0, 123, 255, 1)", backgroundColor, "Wrong background color");
@@ -98,7 +96,7 @@ public class UiStepCases {
         }
     }
 
-    @Допустим("^клик на .* \"([^\"]*)\"")
+    @И("^клик на .* \"([^\"]*)\"$")
     public void клик_на_элемент(String elName) {
         if (elName.equals("Добавить")) {
             try {
@@ -117,7 +115,7 @@ public class UiStepCases {
         }
     }
 
-    @Допустим("заполнить поле {string} значением {string}")
+    @И("заполнить поле {string} значением {string}")
     public void заполнить_поле_значением(String fieldName, String value) {
         WebElement element = null;
         switch (fieldName) {
@@ -150,12 +148,12 @@ public class UiStepCases {
                 } catch (NoSuchElementException e) {
                     fail("Element " + fieldName + " not found");
                 }
-                if (value.equals("true".toLowerCase())){
-                    if (!element.isSelected()){
+                if (value.equals("true".toLowerCase())) {
+                    if (!element.isSelected()) {
                         element.click();
                     }
                 } else if (value.equals("false".toLowerCase())) {
-                    if (element.isSelected()){
+                    if (element.isSelected()) {
                         element.click();
                     }
                 } else {
@@ -169,42 +167,40 @@ public class UiStepCases {
 
     // START FROM HERE
 
-    @Допустим("Закрытие модального окна")
-    public void модальное_окно_закрыто() {
-        Hooks.getDriver().manage().timeouts().pageLoadTimeout(Duration.ofSeconds(5));
-        Hooks.getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-        try {
-            Boolean modalWindowCloseCheck = Hooks.getWait().until(ExpectedConditions.invisibilityOfElementLocated(
-                    By.id("editModalLabel")));
-        } catch (org.openqa.selenium.TimeoutException e) {
-            fail("Modal window still opened");
+    @И("^закрытие .* \"([^\"]*)\"$")
+    public void модальное_окно_закрыто(String elemToBeClosed) {
+        if (elemToBeClosed.equals("Добавление товара")) {
+            try {
+                Hooks.getWait().until(ExpectedConditions.invisibilityOfElementLocated(
+                        By.id("editModalLabel")));
+            } catch (org.openqa.selenium.TimeoutException e) {
+                fail("Modal window still opened");
+            }
+        } else {
+            throw new RuntimeException("Элемент " + elemToBeClosed + " не определен");
         }
     }
 
-    @Допустим("В таблице отображается товар с параметрами 'id' {string} {string} {string}")
-    public void в_таблице_отображается_товар_с_параметрами(String name, String type, String exot) {
-        int lastIdBeforeAdd = getLastIdBeforeAdd();
+//    @И("сохранить в DataManager .* \"([^\"]*)\" с значением \"([^\"]*)\"$")
+//    public void saveData(String key, String data){
+//        DataManager.getDataManager().saveDataValue(key, data);
+//    }
 
-        WebElement newGoodId = Hooks.getDriver().findElement(By.xpath("//tbody/tr[last()]/th"));
+    @Тогда("в таблице отображается товар с параметрами {string} {string} {string}")
+    public void в_таблице_отображается_товар_с_параметрами(String name, String type, String exot) {
+        int lastIdBeforeAdd = Integer.parseInt(driver.findElement(By.xpath(
+                "//tbody/tr[last() - 1]/th")).getText());
+        //        Тут создаем нужный номер айдишника для проверки добавленного товара.
+        String id = String.valueOf(lastIdBeforeAdd + 1);
+
+        WebElement newGoodId = driver.findElement(By.xpath("//tbody/tr[last()]/th"));
         WebElement newGoodName = newGoodId.findElement(By.xpath("../td[1]"));
         WebElement newGoodType = newGoodId.findElement(By.xpath("../td[2]"));
         WebElement newGoodExoticBool = newGoodId.findElement(By.xpath("../td[3]"));
-//        Тут создаем нужный номер айдишника для проверки добавленного товара.
-        String newLastId = String.valueOf(lastIdBeforeAdd + 1);
-        Assertions.assertEquals(newLastId, newGoodId.getText(), "Некорректный id добавленного товара.");
+        // Проверяем корректность данных
+        Assertions.assertEquals(id, newGoodId.getText(), "Некорректный id добавленного товара.");
         Assertions.assertEquals(name, newGoodName.getText(), "Не соответсвие названия добавленного товара");
         Assertions.assertEquals(type, newGoodType.getText(), "Некорректный тип товара");
         Assertions.assertEquals(exot, newGoodExoticBool.getText(), "Некорректный тип экзотичности.");
     }
-
-
-    private WebElement getElementByXpath(String Xpath) {
-        WebElement element = driver.findElement(By.xpath(Xpath));
-        return element;
-    }
-    private int getLastIdBeforeAdd() {
-        WebElement element = getElementByXpath("//tbody/tr[last() - 1]/th");
-        return Integer.parseInt(element.getText());
-    }
-
 }
