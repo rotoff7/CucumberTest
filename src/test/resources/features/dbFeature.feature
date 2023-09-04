@@ -1,7 +1,7 @@
 # language: ru
 
 @all
-@DataBase
+@db
 Функция: Добавление товаров в БД
 
   Предыстория:
@@ -15,14 +15,16 @@
       | FOOD_NAME   | Нвй фрукт1 тест |
       | FOOD_TYPE   | FRUIT           |
       | FOOD_EXOTIC | 1               |
-#    * cохранить значение "id" в DataManager
     * получить из таблицы данные о добавленном товаре
-#    * сохранить данные выборки в DataManager
     * сверить корректность данных:
       | FOOD_NAME   | Нвй фрукт1 тест |
       | FOOD_TYPE   | FRUIT           |
       | FOOD_EXOTIC | 1               |
+    * удалить добавленный товар из таблицы по "#:FOOD_ID"
 
+
+  #    * cохранить значение "id" в DataManager
+  #    * сохранить данные выборки в DataManager
 
 #      | column      | standard        | data     |
 #      | food_id     | #:generatedId   | #:newID  |

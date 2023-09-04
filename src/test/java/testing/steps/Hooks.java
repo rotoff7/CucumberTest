@@ -7,6 +7,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import testing.utils.UtilClass;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -35,7 +36,7 @@ public class Hooks {
 
 //    @Before("db")
 //    public void connect() {
-//        DataSource source = getDataSource();
+//        DataSource source = UtilClass.getH2DataSource();
 //        try {
 //            connection = source.getConnection();
 //        } catch (SQLException e) {

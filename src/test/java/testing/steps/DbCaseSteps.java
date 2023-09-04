@@ -2,6 +2,7 @@ package testing.steps;
 
 import io.cucumber.java.ru.Допустим;
 import io.cucumber.java.ru.И;
+import io.cucumber.java.sl.In;
 import org.h2.jdbcx.JdbcDataSource;
 import org.junit.jupiter.api.Assertions;
 import testing.data.DataManager;
@@ -19,6 +20,7 @@ public class DbCaseSteps {
     private Connection connection;
     private String sqlInsert = "INSERT INTO food (food_name, food_type, food_exotic) VALUES (?, ?, ?);";
     private String sqlSelect = "SELECT * FROM food WHERE food_name = ? AND food_type = ?;";
+    private String sqlDelete = "DELETE FROM food WHERE FOOD_ID = (?)";
 
     @И("^установка соединения с БД \"([^\"]*)\"$")
     public void connect(String bdType) {
@@ -78,17 +80,21 @@ public class DbCaseSteps {
         for (String key : setkey){
             Assertions.assertEquals(standard.get(key), datam.get(key),"Assertions fail");
         }
-
     }
-
-    private void delRow(int id, Connection connect) {
-        String sqlRequest = "delete from FOOD where food_id = (?)";
-        try (PreparedStatement ps = connect.prepareStatement(sqlRequest);) {
+    @И("^удалить добавленный товар из таблицы по \"([^\"]*)\"$")
+    public void удалить_товар_по_id(String key){
+        int id;
+        if (key.startsWith("#:")){
+            String idKey = key.replace("#:", "");
+            id = Integer.parseInt(DataManager.getDataManager().getDataValue(idKey));
+        } else {
+            id = Integer.parseInt(key);
+        }
+        try (PreparedStatement ps = connection.prepareStatement(sqlDelete);){
             ps.setInt(1, id);
             ps.executeUpdate();
-        } catch (SQLException e) {
+        } catch (SQLException e){
             throw new RuntimeException(e);
         }
     }
-
 }
