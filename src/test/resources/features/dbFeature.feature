@@ -19,11 +19,10 @@
     * получить из таблицы данные о добавленном товаре
 #    * сохранить данные выборки в DataManager
     * сверить корректность данных:
-      | FOOD_ID     | #:food_id       |
       | FOOD_NAME   | Нвй фрукт1 тест |
-#      | food_type   | FRUIT           |
-      | FOOD_EXOTIC | 1               |
       | FOOD_TYPE   | FRUIT           |
+      | FOOD_EXOTIC | 1               |
+
 
 #      | column      | standard        | data     |
 #      | food_id     | #:generatedId   | #:newID  |

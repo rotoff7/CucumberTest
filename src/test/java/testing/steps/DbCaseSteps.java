@@ -76,9 +76,6 @@ public class DbCaseSteps {
         Set<String> setkey = standard.keySet();
         System.out.println(datam);
         for (String key : setkey){
-            if (standard.get(key).startsWith("#:")){
-                continue; // ИСПРААААВИТЬ!!!1
-            }
             Assertions.assertEquals(standard.get(key), datam.get(key),"Assertions fail");
         }
 
